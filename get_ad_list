@@ -14,10 +14,12 @@ def parse_args():
 
 def main():
     args = parse_args()
+    # plaintext host list from https://pgl.yoyo.org/adservers/
     BLOCKLIST_URL = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&showintro=0&mimetype=plaintext"
 
     r = requests.get(BLOCKLIST_URL)
 
+    # .lsrules format based on documentation here: https://help.obdev.at/littlesnitch/ref-lsrules-file-format
     blocklist_rule = {
             "name": "Advertising Block List",
             "description": "Block access to advertising domains based on ad serverlist.",
