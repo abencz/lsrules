@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import argparse
+import json
+import requests
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("outfile", nargs="?", type=argparse.FileType("w"), default="ad_blocklist.lsrules")
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    BLOCKLIST_URL = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&showintro=0&mimetype=plaintext"
+
+    r = requests.get(BLOCKLIST_URL)
+
+    blocklist_rule = {
+            "name": "Advertising Block List",
+            "description": "Block access to advertising domains based on ad serverlist.",
+            "denied-remote-domains": [url.decode("utf-8") for url in r.iter_lines()]
+        }
+
+    j = json.dump(blocklist_rule, args.outfile, indent=4)
+
+
+if __name__ == "__main__":
+    main()
